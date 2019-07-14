@@ -1,0 +1,88 @@
+{
+    "name": "PSPNet",
+    "n_gpu": 1,
+    
+    "arch": {
+        "type": "PSPNet",
+        "args": {
+            "backbone": "resnet50",
+            "freeze_bn": false,
+            "freeze_backbone": false
+        }
+    },
+
+    "train_loader": {
+        "type": "COCO",
+        "args":{
+            "data_dir": "/home/yassine/Datasets/vision/cocostuff-164k",
+            "batch_size": 2,
+            "crop_size": 100,
+            "shuffle": true,
+            "base_size": 520,
+            "scale": true,
+            "augment": true,
+            "flip": true,
+            "rotate": true,
+            "blur": true,
+            "split": "train2017",
+            "num_workers": 8
+        }
+    },
+
+
+    "val_loader": {
+        "type": "VOC",
+        "args":{
+            "data_dir": "/home/yassine/Downloads/VOCtrainval_11-May-2012",
+            "batch_size": 1,
+            "crop_size": 480,
+            "val": true,
+            "split": "val",
+            "num_workers": 4
+        }
+    },
+
+    "test_loader": {
+        "type": "VOC",
+        "args":{
+            "data_dir": "/home/yassine/Downloads/VOCtrainval_11-May-2012",
+            "crop_size": 480,
+            "num_workers": 4
+        }
+    },
+
+    "optimizer": {
+        "type": "SGD",
+        "differential_lr": true,
+        "args":{
+            "lr": 0.01,
+            "weight_decay": 1e-4,
+            "momentum": 0.9
+        }
+    },
+
+
+    "loss": "CrossEntropyLoss2d",
+    "ignore_index": 255,
+    "lr_scheduler": {
+        "type": "Poly",
+        "args": {}
+    },
+
+
+    "trainer": {
+        "epochs": 80,
+        "save_dir": "saved/",
+        "save_period": 50,
+  
+        "monitor": "max Mean_IoU",
+        "early_stop": 10,
+        
+        "tensorboard": true,
+        "log_dir": "saved/runs",
+        "log_per_iter": 20,
+
+        "val": true,
+        "val_per_epochs": 5
+    }
+}
