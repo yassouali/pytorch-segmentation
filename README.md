@@ -19,7 +19,8 @@ pip install --user -r requirements.txt
 
 - A clear structure and easy to navigate,
 - `.json` config file with a lot of possibilities for parameter tuning,
-- Supports various models and datasets,
+- Supports various models, losses, lr schedulers data augmentations and datasets,
+
 
 
 ### Code structure
@@ -52,9 +53,9 @@ The code structure is based on [pytorch-template](https://github.com/victoresque
       ├── metrics.py - evaluation metrics used
       └── lr_scheduler - learning rate schedulers 
   ```
+## What is available
 
-
-## Supported models 
+### Supported models 
 - (**Deeplab V3+**) Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation [[Paper]](https://arxiv.org/abs/1802.02611)
 - (**GCN**) Large Kernel Matter, Improve Semantic Segmentation by Global Convolutional Network [[Paper]](https://arxiv.org/abs/1703.02719)
 - (**DUC, HDC**) Understanding Convolution for Semantic Segmentation [[Paper]](https://arxiv.org/abs/1702.08502) 
@@ -64,25 +65,30 @@ The code structure is based on [pytorch-template](https://github.com/victoresque
 - (**SegNet**) A Deep ConvolutionalEncoder-Decoder Architecture for ImageSegmentation (2016): [[Paper]](https://arxiv.org/pdf/1511.00561)
 - (**FCN**) Fully Convolutional Networks for Semantic Segmentation (2015): [[Paper]](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf) 
 
-## Datasets
+### Datasets
 
-### Pascal VOC
+#### Pascal VOC
 For pascal voc, first download the original dataset from [host.robots.ox.ac.uk](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar), after extracting the files we'll end up with `VOCtrainval_11-May-2012/VOCdevkit/VOC2012` containing the XML annotation for both object detection and segmentation, and JPEG images.
 
 The second step is to augment the dataset using the annotations of [Semantic Contours from Inverse Detectors](http://home.bharathh.info/pubs/pdfs/BharathICCV2011.pdf), first download the image sets (`train_aug`, `trainval_aug`, `val_aug` and `test_aug`) from this link [Aug ImageSets](https://www.dropbox.com/sh/jicjri7hptkcu6i/AACHszvCyYQfINpRI1m5cNyta?dl=0&lst=) and add them the rest of the segmentation sets in `/VOCtrainval_11-May-2012/VOCdevkit/VOC2012/ImageSets/Segmentation`, and then new annotations [SegmentationClassAug](https://www.dropbox.com/s/oeu149j8qtbs1x0/SegmentationClassAug.zip?dl=0) and add them to the path `VOCtrainval_11-May-2012/VOCdevkit/VOC2012`, now we're set, for training use the path to `VOCtrainval_11-May-2012`
 
-### CityScapes
+#### CityScapes
 First download the images and the annotations (there is two types of annotations, Fine `gtFine_trainvaltest.zip` and Coarse `gtCoarse.zip` and the images `leftImg8bit_trainvaltest.zip`) from the official website [cityscapes-dataset.com](https://www.cityscapes-dataset.com/downloads/), extract all of them in the same folder, and use the location of this folder in `config.json` for training.
 
-### ADE20K
+#### ADE20K
 For ADE20K, simply download the images and their annotations for training and validation from [sceneparsing.csail.mit.edu](http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip), and for the rest visit the [website](http://sceneparsing.csail.mit.edu/).
 
 
-### COCO Stuff
+#### COCO Stuff
 For COCO, there is two partitions, CocoStuff10k with only 10k that are used for training the evaluation, note that this dataset is outdated, can be used for small scale testing and training, and can be downloaded [here](https://github.com/nightrome/cocostuff10k). For the official dataset with all of the training 164k examples, it can be found in the official [website](http://cocodataset.org/#download)
 
 Note that when using COCO dataset, 164k version is used per default, if 10k is prefered, this needs to be specified with an additionnal parameter `partition = 'CocoStuff164k'` in the config file with the corresponding path.
 
+### Losses
+
+### Learning rate schedulers
+
+### Data augmentation
 
 
 ### Config file format
