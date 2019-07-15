@@ -1,5 +1,5 @@
 from base import BaseDataSet, BaseDataLoader
-from utils import pallete
+from utils import palette
 import numpy as np
 import os
 import torch
@@ -9,6 +9,7 @@ from glob import glob
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+
 class ADE20KDataset(BaseDataSet):
     """
     ADE20K dataset 
@@ -16,7 +17,7 @@ class ADE20KDataset(BaseDataSet):
     """
     def __init__(self, **kwargs):
         self.num_classes = 150
-        self.palette = pallete.ADE20K_pallete
+        self.palette = palette.ADE20K_palette
         super(ADE20KDataset, self).__init__(**kwargs)
 
     def _set_files(self):

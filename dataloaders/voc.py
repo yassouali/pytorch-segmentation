@@ -2,7 +2,7 @@
 # https://github.com/kazuto1011/deeplab-pytorch
 
 from base import BaseDataSet, BaseDataLoader
-from utils import pallete
+from utils import palette
 import numpy as np
 import os
 import scipy
@@ -19,7 +19,7 @@ class VOCDataset(BaseDataSet):
     """
     def __init__(self, **kwargs):
         self.num_classes = 21
-        self.palette = pallete.get_voc_pallete(self.num_classes)
+        self.palette = palette.get_voc_palette(self.num_classes)
         super(VOCDataset, self).__init__(**kwargs)
 
     def _set_files(self):
@@ -47,13 +47,12 @@ class VOCAugDataset(BaseDataSet):
     """
     def __init__(self, **kwargs):
         self.num_classes = 21
-        self.palette = pallete.get_voc_pallete(self.num_classes)
+        self.palette = palette.get_voc_palette(self.num_classes)
         super(VOCAugDataset, self).__init__(**kwargs)
 
     def _set_files(self):
         self.root = os.path.join(self.root, 'VOCdevkit/VOC2012')
 
-        self.split = self.split + '_aug'
         file_list = os.path.join(self.root, "ImageSets/Segmentation", self.split + ".txt")
         file_list = [line.rstrip().split(' ') for line in tuple(open(file_list, "r"))]
         self.files, self.labels = list(zip(*file_list))
@@ -89,7 +88,7 @@ class VOC(BaseDataLoader):
             'return_id': return_id,
             'val': val
         }
-
+    
         if split in ["train_aug", "trainval_aug", "val_aug", "test_aug"]:
             self.dataset = VOCAugDataset(**kwargs)
         elif split in ["train", "trainval", "val", "test"]:
@@ -106,7 +105,7 @@ class VOCTestDataset(Dataset):
         self.num_classes = 21
         self.root = root
         self.crop_size = crop_size
-        self.palette = pallete.get_voc_pallete(self.num_classes)
+        self.palette = palette.get_voc_palette(self.num_classes)
 
         self.root = os.path.join(self.root, f'VOCdevkit/VOC2012')
         file_list = os.path.join(self.root, "ImageSets/Segmentation", "test.txt")

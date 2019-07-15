@@ -12,9 +12,9 @@
     },
 
     "train_loader": {
-        "type": "COCO",
+        "type": "VOC",
         "args":{
-            "data_dir": "/home/yassine/Datasets/vision/cocostuff-164k",
+            "data_dir": "/home/yassine/Downloads/VOCtrainval_11-May-2012",
             "batch_size": 2,
             "crop_size": 100,
             "shuffle": true,
@@ -24,11 +24,10 @@
             "flip": true,
             "rotate": true,
             "blur": true,
-            "split": "train2017",
+            "split": "train_aug",
             "num_workers": 8
         }
     },
-
 
     "val_loader": {
         "type": "VOC",

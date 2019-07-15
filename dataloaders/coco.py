@@ -6,7 +6,7 @@ from PIL import Image
 from glob import glob
 import numpy as np
 import scipy.io as sio
-from utils import pallete
+from utils import palette
 import torch
 import os
 import cv2
@@ -15,7 +15,7 @@ class CocoStuff10k(BaseDataSet):
     def __init__(self, warp_image = True, **kwargs):
         self.warp_image = warp_image
         self.num_classes = 182
-        self.palette = pallete.COCO_pallete
+        self.palette = palette.COCO_palette
         super(CocoStuff10k, self).__init__(**kwargs)
 
     def _set_files(self):
@@ -40,7 +40,7 @@ class CocoStuff10k(BaseDataSet):
 class CocoStuff164k(BaseDataSet):
     def __init__(self, **kwargs):
         self.num_classes = 182
-        self.palette = pallete.COCO_pallete
+        self.palette = palette.COCO_palette
         super(CocoStuff164k, self).__init__(**kwargs)
 
     def _set_files(self):

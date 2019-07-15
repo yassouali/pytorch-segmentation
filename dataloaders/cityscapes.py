@@ -1,5 +1,5 @@
 from base import BaseDataSet, BaseDataLoader
-from utils import pallete
+from utils import palette
 from glob import glob
 import numpy as np
 import os
@@ -21,7 +21,7 @@ class CityScapesDataset(BaseDataSet):
     def __init__(self, mode='fine', **kwargs):
         self.num_classes = 19
         self.mode = mode
-        self.palette = pallete.CityScpates_pallete
+        self.palette = palette.CityScpates_palette
         self.id_to_trainId = ID_TO_TRAINID
         super(CityScapesDataset, self).__init__(**kwargs)
 
@@ -91,7 +91,7 @@ class CityScapesTest(Dataset):
 
         self.root = root
         self.crop_size = crop_size
-        self.palette = pallete.CityScpates_pallete[:self.num_classes]
+        self.palette = palette.CityScpates_palette[:self.num_classes]
 
         img_dir_name = 'leftImg8bit_trainvaltest'
         image_path = os.path.join(self.root, img_dir_name, 'leftImg8bit', 'test')
