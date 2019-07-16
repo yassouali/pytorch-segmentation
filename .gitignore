@@ -5,7 +5,6 @@ __pycache__/
 
 # C extensions
 *.so
-pretrained/
 
 # Distribution / packaging
 .Python
@@ -101,12 +100,14 @@ ENV/
 # mypy
 .mypy_cache/
 
-# input data, saved log, checkpoints
+# input data, saved log, checkpoints and pretrained models
 data/
 input/
 saved/
 outputs/
 datasets/
+pretrained/
+trained_models/
 
 # editor, os cache directory
 .vscode/
