@@ -101,7 +101,7 @@ def main():
     if dataset_type == 'CityScapes': 
         scales = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25] 
     else:
-        scales = [0.75, 1.0, 1.25]
+        scales = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0]
     loader = getattr(dataloaders, config['train_loader']['type'])(**config['train_loader']['args'])
     to_tensor = transforms.ToTensor()
     normalize = transforms.Normalize(loader.MEAN, loader.STD)
