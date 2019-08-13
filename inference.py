@@ -112,8 +112,6 @@ def main():
     model = getattr(models, config['arch']['type'])(num_classes, **config['arch']['args'])
     availble_gpus = list(range(torch.cuda.device_count()))
     device = torch.device('cuda:0' if len(availble_gpus) > 0 else 'cpu')
-    if len(availble_gpus) > 1:
-        model = torch.nn.DataParallel(model, device_ids=availble_gpus)
 
     checkpoint = torch.load(args.model)
     if isinstance(checkpoint, dict) and 'state_dict' in checkpoint.keys():
