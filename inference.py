@@ -131,13 +131,15 @@ def main():
         for img_file in tbar:
             image = Image.open(img_file).convert('RGB')
             input = normalize(to_tensor(image)).unsqueeze(0)
-
+            
+            args.mode = 'none'
             if args.mode == 'multiscale':
                 prediction = multi_scale_predict(model, input, scales, num_classes, device)
             elif args.mode == 'sliding':
                 prediction = sliding_predict(model, input, num_classes)
             else:
-                prediction = model(input).squeeze(0).cpu().numpy()
+                prediction = model(input.to(device))
+                prediction = prediction.squeeze(0).cpu().numpy()
             prediction = F.softmax(torch.from_numpy(prediction), dim=0).argmax(0).cpu().numpy()
             save_images(image, prediction, args.output, img_file, palette)
 
@@ -151,7 +153,7 @@ def parse_arguments():
                         help='Path to the .pth model checkpoint to be used in the prediction')
     parser.add_argument('-i', '--images', default=None, type=str,
                         help='Path to the images to be segmented')
-    parser.add_argument('-o', '--output', default='outputs', type=str,
+    parser.add_argument('-o', '--output', default='outputs', type=str,  
                         help='Output Path')
     parser.add_argument('-e', '--extension', default='jpg', type=str,
                         help='The extension of the images to be segmented')

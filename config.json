@@ -14,7 +14,7 @@
     "train_loader": {
         "type": "VOC",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "/home/yassine/Datasets/vision/PascalVoc/VOC",
             "batch_size": 8,
             "base_size": 400,
             "crop_size": 380,
@@ -32,7 +32,7 @@
     "val_loader": {
         "type": "VOC",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "/home/yassine/Datasets/vision/PascalVoc/VOC",
             "batch_size": 8,
             "crop_size": 480,
             "val": true,
