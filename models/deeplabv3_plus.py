@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from torchvision import models
 import torch.utils.model_zoo as model_zoo
 from utils.helpers import initialize_weights
+from itertools import chain
 
 ''' 
 -> ResNet BackBone
@@ -334,7 +335,8 @@ class Decoder(nn.Module):
 
 class DeepLab(BaseModel):
     def __init__(self, num_classes, in_channels=3, backbone='xception', pretrained=True, 
-                output_stride=16, freeze_bn=False):
+                output_stride=16, freeze_bn=False, **_):
+                
         super(DeepLab, self).__init__()
         assert ('xception' or 'resnet' in backbone)
         if 'resnet' in backbone:
@@ -362,24 +364,13 @@ class DeepLab(BaseModel):
     # FIXME: in xception, we use the parameters from xception and not aligned xception
     # better to have higher lr for this backbone
 
-    def get_1x_lr_params(self):
-        for module in self.backbone.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
+    def get_backbone_params(self):
+        return self.backbone.parameters()
 
-    def get_10x_lr_params(self):
-        for module in self.ASSP.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
-
-        for module in self.decoder.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
+    def get_decoder_params(self):
+        return chain(self.ASSP.parameters(), self.decoder.parameters())
 
     def freeze_bn(self):
         for module in self.modules():
             if isinstance(module, nn.BatchNorm2d): module.eval()
-    
+

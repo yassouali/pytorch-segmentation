@@ -3,9 +3,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
+from itertools import chain
+from math import ceil
 
 class SegNet(BaseModel):
-    def __init__(self, num_classes, in_channels=3, pretrained=True):
+    def __init__(self, num_classes, in_channels=3, pretrained=True, freeze_bn=False, **_):
         super(SegNet, self).__init__()
         vgg_bn = models.vgg16_bn(pretrained= pretrained)
         encoder = list(vgg_bn.features.children())
@@ -47,6 +49,7 @@ class SegNet(BaseModel):
 
         self._initialize_weights(self.stage1_decoder, self.stage2_decoder, self.stage3_decoder,
                                     self.stage4_decoder, self.stage5_decoder)
+        if freeze_bn: self.freeze_bn()
 
     def _initialize_weights(self, *stages):
         for modules in stages:
@@ -58,7 +61,6 @@ class SegNet(BaseModel):
                 elif isinstance(module, nn.BatchNorm2d):
                     module.weight.data.fill_(1)
                     module.bias.data.zero_()
-
 
     def forward(self, x):
         # Encoder
@@ -100,6 +102,16 @@ class SegNet(BaseModel):
 
         return x
 
+    def get_backbone_params(self):
+        return []
+
+    def get_decoder_params(self):
+        return self.parameters()
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
+
 
 
 class DecoderBottleneck(nn.Module):
@@ -115,7 +127,7 @@ class DecoderBottleneck(nn.Module):
         self.downsample = nn.Sequential(
                 nn.ConvTranspose2d(inchannels, inchannels//2, kernel_size=2, stride=2, bias=False),
                 nn.BatchNorm2d(inchannels//2))
-    
+
     def forward(self, x):
         out = self.conv1(x)
         out = self.bn1(out)
@@ -161,7 +173,7 @@ class LastBottleneck(nn.Module):
         return out
 
 class SegResNet(BaseModel):
-    def __init__(self, num_classes, in_channels=3, pretrained=True):
+    def __init__(self, num_classes, in_channels=3, pretrained=True, freeze_bn=False, **_):
         super(SegResNet, self).__init__()
         resnet50 = models.resnet50(pretrained=pretrained)
         encoder = list(resnet50.children())
@@ -190,21 +202,24 @@ class SegResNet(BaseModel):
             nn.ConvTranspose2d(64, 64, kernel_size=2, stride=2, bias=False),
             nn.Conv2d(64, num_classes, kernel_size=3, stride=1, padding=1)
         )
-    
+        if freeze_bn: self.freeze_bn()
+
     def forward(self, x):
         inputsize = x.size()
 
         # Encoder
         x, indices = self.first_conv(x)
         x = self.encoder(x)
-        
+
         # Decoder
         x = self.decoder(x)
+        h_diff = ceil((x.size()[2] - indices.size()[2]) / 2)
+        w_diff = ceil((x.size()[3] - indices.size()[3]) / 2)
+        if indices.size()[2] % 2 == 1:
+            x = x[:, :, h_diff:x.size()[2]-(h_diff-1), w_diff: x.size()[3]-(w_diff-1)]
+        else:
+            x = x[:, :, h_diff:x.size()[2]-h_diff, w_diff: x.size()[3]-w_diff]
 
-        h_diff = (x.size()[2] - indices.size()[2]) // 2
-        w_diff = (x.size()[3] - indices.size()[3]) // 2
-        x = x[:, :, h_diff:x.size()[2]-h_diff, w_diff: x.size()[3]-w_diff]
-        
         x = F.max_unpool2d(x, indices, kernel_size=2, stride=2)
         x = self.last_conv(x)
         
@@ -216,5 +231,15 @@ class SegResNet(BaseModel):
             if w_diff % 2 != 0: x = x[:, :, :, :-1]
 
         return x
+
+    def get_backbone_params(self):
+        return chain(self.first_conv.parameters(), self.encoder.parameters())
+
+    def get_decoder_params(self):
+        return chain(self.decoder.parameters(), self.last_conv.parameters())
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
 
 

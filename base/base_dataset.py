@@ -63,9 +63,21 @@ class BaseDataSet(Dataset):
 
     def _augmentation(self, image, label):
         h, w, _ = image.shape
-        while True:
-            # Rotate the image with an angle between -10 and 10
+        # Scaling, we set the bigger to base size, and the smaller 
+        # one is rescaled to maintain the same ratio, if we don't have any obj in the image, re-do the processing
+        if self.base_size:
+            if self.scale:
+                longside = random.randint(int(self.base_size*0.5), int(self.base_size*2.0))
+            else:
+                longside = self.base_size
+            h, w = (longside, int(1.0 * longside * w / h + 0.5)) if h > w else (int(1.0 * longside * h / w + 0.5), longside)
+            image = cv2.resize(image, (w, h), interpolation=cv2.INTER_LINEAR)
+            label = cv2.resize(label, (w, h), interpolation=cv2.INTER_NEAREST)
+       
+        while True: # The rotated crop must have some objects
             image_new, label_new = image, label
+            h, w, _ = image_new.shape
+            # Rotate the image with an angle between -10 and 10
             if self.rotate:
                 angle = random.randint(-10, 10)
                 center = (w / 2, h / 2)
@@ -73,18 +85,8 @@ class BaseDataSet(Dataset):
                 image_new = cv2.warpAffine(image_new, rot_matrix, (w, h), flags=cv2.INTER_LINEAR)#, borderMode=cv2.BORDER_REFLECT)
                 label_new = cv2.warpAffine(label_new, rot_matrix, (w, h), flags=cv2.INTER_NEAREST)#,  borderMode=cv2.BORDER_REFLECT)
 
-            # Scaling, we set the bigger to base size, and the smaller 
-            # one is rescaled to maintain the same ratio, if we don't have any obj in the image, re-do the processing
-            if self.base_size:
-                if self.scale:
-                    longside = random.randint(int(self.base_size*0.5), int(self.base_size*2.0))
-                    h, w = (longside, int(1.0 * longside * w / h + 0.5)) if h > w else (int(1.0 * longside * h / w + 0.5), longside)
-                image_new = cv2.resize(image_new, (w, h), interpolation=cv2.INTER_LINEAR)
-                label_new = cv2.resize(label_new, (w, h), interpolation=cv2.INTER_NEAREST)
-
             # Padding to return the correct crop size
             if self.crop_size:
-                h, w, _ = image_new.shape
                 pad_h = max(self.crop_size - h, 0)
                 pad_w = max(self.crop_size - w, 0)
                 pad_kwargs = {
@@ -92,8 +94,7 @@ class BaseDataSet(Dataset):
                     "bottom": pad_h,
                     "left": 0,
                     "right": pad_w,
-                    "borderType": cv2.BORDER_CONSTANT,
-                }
+                    "borderType": cv2.BORDER_CONSTANT,}
                 if pad_h > 0 or pad_w > 0:
                     image_new = cv2.copyMakeBorder(image_new, value=0, **pad_kwargs)
                     label_new = cv2.copyMakeBorder(label_new, value=0, **pad_kwargs)
@@ -116,8 +117,7 @@ class BaseDataSet(Dataset):
         if self.flip:
             if random.random() > 0.5:
                 image = np.fliplr(image).copy()
-                if label is not None:
-                    label = np.fliplr(label).copy()
+                label = np.fliplr(label).copy()
 
         # Gaussian Blud (sigma between 0 and 1.5)
         if self.blur:

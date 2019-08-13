@@ -42,11 +42,11 @@ class BaseTrainer:
         # OPTIMIZER
         if self.config['optimizer']['differential_lr']:
             if isinstance(self.model, torch.nn.DataParallel):
-                trainable_params = [{'params': filter(lambda p:p.requires_grad, self.model.module.get_psp_params())},
+                trainable_params = [{'params': filter(lambda p:p.requires_grad, self.model.module.get_decoder_params())},
                                     {'params': filter(lambda p:p.requires_grad, self.model.module.get_backbone_params()), 
                                     'lr': config['optimizer']['args']['lr'] / 10}]
             else:
-                trainable_params = [{'params': filter(lambda p:p.requires_grad, self.model.get_psp_params())},
+                trainable_params = [{'params': filter(lambda p:p.requires_grad, self.model.get_decoder_params())},
                                     {'params': filter(lambda p:p.requires_grad, self.model.get_backbone_params()), 
                                     'lr': config['optimizer']['args']['lr'] / 10}]
         else:

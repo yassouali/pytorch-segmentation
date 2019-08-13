@@ -2,6 +2,7 @@ from base import BaseModel
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from itertools import chain
 
 class encoder(nn.Module):
     def __init__(self, in_channels, out_channels):
@@ -47,7 +48,7 @@ class decoder(nn.Module):
         return x
 
 class UNet(BaseModel):
-    def __init__(self, num_classes, in_channels=3):
+    def __init__(self, num_classes, in_channels=3, freeze_bn=False, **_):
         super(UNet, self).__init__()
         self.down1 = encoder(in_channels, 64)
         self.down2 = encoder(64, 128)
@@ -67,6 +68,7 @@ class UNet(BaseModel):
         self.up4 = decoder(128, 64)
         self.final_conv = nn.Conv2d(64, num_classes, kernel_size=1)
         self._initialize_weights()
+        if freeze_bn: self.freeze_bn()
 
     def _initialize_weights(self):
         for module in self.modules():
@@ -90,5 +92,16 @@ class UNet(BaseModel):
         x = self.up4(x1, x)
         x = self.final_conv(x)
         return x
+
+    def get_backbone_params(self):
+        # There is no backbone for unet, all the parameters are trained from scratch
+        return []
+
+    def get_decoder_params(self):
+        return self.parameters()
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
 
 

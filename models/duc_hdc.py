@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from torchvision import models
 import torch.utils.model_zoo as model_zoo
 from utils.helpers import initialize_weights
+from itertools import chain
 
 ''' 
 -> Dense upsampling convolution block
@@ -211,7 +212,7 @@ class Decoder(nn.Module):
 '''
 
 class DeepLab_DUC_HDC(BaseModel):
-    def __init__(self, num_classes, in_channels=3, pretrained=True, output_stride=8, freeze_bn=False):
+    def __init__(self, num_classes, in_channels=3, pretrained=True, output_stride=8, freeze_bn=False, **_):
         super(DeepLab_DUC_HDC, self).__init__()
 
         self.backbone = ResNet_HDC_DUC(in_channels=in_channels, output_stride=output_stride, pretrained=pretrained)
@@ -230,24 +231,13 @@ class DeepLab_DUC_HDC(BaseModel):
         x = self.DUC_out(x)
         return x
 
-    def get_1x_lr_params(self):
-        for module in self.backbone.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
+    def get_backbone_params(self):
+        return self.backbone.parameters()
 
-    def get_10x_lr_params(self):
-        for module in self.ASSP.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
-
-        for module in self.decoder.modules():
-            if isinstance(module, nn.Conv2d):
-                for param in module.parameters():
-                    if param.requires_grad: yield param
+    def get_decoder_params(self):
+        return chain(self.ASSP.parameters(), self.decoder.parameters(), self.DUC_out.parameters())
 
     def freeze_bn(self):
         for module in self.modules():
             if isinstance(module, nn.BatchNorm2d): module.eval()
-    
+

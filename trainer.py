@@ -26,7 +26,8 @@ class Trainer(BaseTrainer):
         self.viz_transform = transforms.Compose([
             transforms.Resize((400, 400)),
             transforms.ToTensor()])
-
+        
+        if self.device ==  torch.device('cpu'): prefetch = False
         if prefetch:
             self.train_loader = DataPrefetcher(train_loader, device=self.device)
             self.val_loader = DataPrefetcher(val_loader, device=self.device)

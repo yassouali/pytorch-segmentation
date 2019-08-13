@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torchvision
 from base import BaseModel
 from utils.helpers import initialize_weights
+from itertools import chain
 
 '''
 -> BackBone Resnet_GCN
@@ -187,7 +188,8 @@ class BR_Block(nn.Module):
         return x
 
 class GCN(BaseModel):
-    def __init__(self, num_classes, in_channels=3, pretrained=True, use_resnet_gcn=False, backbone='resnet50', use_deconv=True, num_filters=11):
+    def __init__(self, num_classes, in_channels=3, pretrained=True, use_resnet_gcn=False, backbone='resnet50', use_deconv=False,
+                    num_filters=11, freeze_bn=False, **_):
         super(GCN, self).__init__()
         self.use_deconv = use_deconv
         if use_resnet_gcn:
@@ -224,7 +226,8 @@ class GCN(BaseModel):
                                             output_padding=1, stride=2, bias=False)
             self.decon5 = nn.ConvTranspose2d(num_classes, num_classes, kernel_size=3, padding=1,
                                             output_padding=1, stride=2, bias=False)
-        self.final_conv = nn.Conv2d(21, 7, kernel_size=1)
+        self.final_conv = nn.Conv2d(num_classes, num_classes, kernel_size=1)
+        if freeze_bn: self.freeze_bn()
 
     def forward(self, x):
         x1, x2, x3, x4, conv1_sz = self.backbone(x)
@@ -257,3 +260,14 @@ class GCN(BaseModel):
         pad = (x.size(3) - x_topad.size(3), 0, x.size(2) - x_topad.size(2), 0)
         x_topad = F.pad(x_topad, pad, "constant", 0)
         return x_topad
+
+    def get_backbone_params(self):
+        return self.backbone.parameters()
+
+    def get_decoder_params(self):
+        return [p for n, p in self.named_parameters() if 'backbone' not in n]
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
+

@@ -98,7 +98,7 @@ class PSPNet(BaseModel):
         return chain(self.initial.parameters(), self.layer1.parameters(), self.layer2.parameters(), 
                    self.layer3.parameters(), self.layer4.parameters())
 
-    def get_psp_params(self):
+    def get_decoder_params(self):
         return chain(self.master_branch.parameters(), self.auxiliary_branch.parameters())
 
     def freeze_bn(self):
@@ -116,7 +116,7 @@ class PSPNet(BaseModel):
 ## PSP with dense net as the backbone
 
 class PSPDenseNet(BaseModel):
-    def __init__(self, num_classes, in_channels=3, backbone='densenet201', pretrained=True, use_aux=True):
+    def __init__(self, num_classes, in_channels=3, backbone='densenet201', pretrained=True, use_aux=True, freeze_bn=False, **_):
         super(PSPDenseNet, self).__init__()
         self.use_aux = use_aux 
         model = getattr(models, backbone)(pretrained)
@@ -170,6 +170,7 @@ class PSPDenseNet(BaseModel):
         )
 
         initialize_weights(self.master_branch, self.auxiliary_branch)
+        if freeze_bn: self.freeze_bn()
 
     def forward(self, x):
         input_size = (x.size()[2], x.size()[3])
@@ -192,4 +193,14 @@ class PSPDenseNet(BaseModel):
             return output, aux
         return output
 
+    def get_backbone_params(self):
+        return chain(self.block0.parameters(), self.block1.parameters(), self.block2.parameters(), 
+                   self.block3.parameters(), self.transition1.parameters(), self.transition2.parameters(),
+                   self.transition3.parameters())
 
+    def get_decoder_params(self):
+        return chain(self.master_branch.parameters(), self.auxiliary_branch.parameters())
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()

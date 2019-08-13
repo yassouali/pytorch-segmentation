@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torchvision import models
 from base import BaseModel
 from utils.helpers import initialize_weights
+from itertools import chain
 
 class PSPModule(nn.Module):
     # In the original inmplementation they use precise RoI pooling 
@@ -117,7 +118,7 @@ class FPN_fuse(nn.Module):
 
 class UperNet(BaseModel):
     # Implementing only the object path
-    def __init__(self, num_classes, in_channels=3, backbone='resnet101', pretrained=True, use_aux=True, fpn_out=256):
+    def __init__(self, num_classes, in_channels=3, backbone='resnet101', pretrained=True, use_aux=True, fpn_out=256, freeze_bn=False, **_):
         super(UperNet, self).__init__()
 
         if backbone == 'resnet34' or backbone == 'resnet18':
@@ -128,7 +129,8 @@ class UperNet(BaseModel):
         self.PPN = PSPModule(feature_channels[-1])
         self.FPN = FPN_fuse(feature_channels, fpn_out=fpn_out)
         self.head = nn.Conv2d(fpn_out, num_classes, kernel_size=3, padding=1)
-
+        if freeze_bn: self.freeze_bn()
+    
     def forward(self, x):
         input_size = (x.size()[2], x.size()[3])
 
@@ -138,3 +140,14 @@ class UperNet(BaseModel):
 
         x = F.interpolate(x, size=input_size, mode='bilinear')
         return x
+
+    def get_backbone_params(self):
+        return self.backbone.parameters()
+
+    def get_decoder_params(self):
+        return chain(self.PPN.parameters(), self.FPN.parameters(), self.head.parameters())
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
+

@@ -4,9 +4,10 @@ import torch.nn.functional as F
 from torchvision import models
 from utils.helpers import get_upsampling_weight
 import torch
+from itertools import chain
 
 class FCN8(BaseModel):
-    def __init__(self, num_classes, pretrained=True):
+    def __init__(self, num_classes, pretrained=True, freeze_bn=False, **_):
         super(FCN8, self).__init__()
         vgg = models.vgg16(pretrained)
         features = list(vgg.features.children())
@@ -70,6 +71,7 @@ class FCN8(BaseModel):
         for m in self.modules():
             if isinstance(m, nn.ConvTranspose2d):
                 m.weight.requires_grad = False
+        if freeze_bn: self.freeze_bn()
 
     def forward(self, x):
         imh_H, img_W = x.size()[2], x.size()[3]
@@ -97,4 +99,15 @@ class FCN8(BaseModel):
         # Remove the corresponding padded regions to the input img size
         final_value = final_value[:, :, 31: (31 + imh_H), 31: (31 + img_W)].contiguous()
         return final_value
+
+    def get_backbone_params(self):
+        return chain(self.pool3.parameters(), self.pool4.parameters(), self.pool5.parameters(), self.output.parameters())
+
+    def get_decoder_params(self):
+        return chain(self.up_output.parameters(), self.adj_pool4.parameters(), self.up_pool4_out.parameters(),
+            self.adj_pool3.parameters(), self.up_final.parameters())
+
+    def freeze_bn(self):
+        for module in self.modules():
+            if isinstance(module, nn.BatchNorm2d): module.eval()
 
