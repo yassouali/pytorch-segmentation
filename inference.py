@@ -132,7 +132,6 @@ def main():
             image = Image.open(img_file).convert('RGB')
             input = normalize(to_tensor(image)).unsqueeze(0)
             
-            args.mode = 'none'
             if args.mode == 'multiscale':
                 prediction = multi_scale_predict(model, input, scales, num_classes, device)
             elif args.mode == 'sliding':
