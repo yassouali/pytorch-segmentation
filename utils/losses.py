@@ -37,7 +37,6 @@ class DiceLoss(nn.Module):
         self.smooth = smooth
 
     def forward(self, output, target):
-        print(self.ignore_index not in range(target.min(), target.max()))
         if self.ignore_index not in range(target.min(), target.max()):
             if (target == self.ignore_index).sum() > 0:
                 target[target == self.ignore_index] = target.min()
