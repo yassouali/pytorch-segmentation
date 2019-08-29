@@ -31,13 +31,15 @@ class CrossEntropyLoss2d(nn.Module):
         return loss
 
 class DiceLoss(nn.Module):
-    def __init__(self, smooth=1.):
+    def __init__(self, smooth=1., ignore_index=None):
         super(DiceLoss, self).__init__()
+        self.ignore_index = ignore_index
         self.smooth = smooth
 
     def forward(self, output, target):
+        target[target == self.ignore_index] = 0
         target = make_one_hot(target.unsqueeze(dim=1), classes=output.size()[1])
-        output = F.softmax(output)
+        output = F.softmax(output, dim=1)
         # output = output.sigmoid()
         # have to be contiguous since they may from a torch.view op
         output_flat = output.contiguous().view(-1)
