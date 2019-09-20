@@ -73,7 +73,7 @@ In addition to the Cross-Entorpy loss, there is also
 
 ### Learning rate schedulers
 - **Poly learning rate**, where the learning rate is scaled down linearly from the starting value down to zero during training. Considered as the go to scheduler for semantic segmentaion (see Figure below).
-- **One Cycle learning rate**, for a learning rate LR, we start from LR / 10 up to LR for 30% of training time, and we scale down to LR / 25 for remaining time, the scaling is done in a cos annealing fashion (see Figure bellow), the momentum is also modified but in the opposite manner starting from 0.95 down to 0.85 and up to 0.95, for more detail see the paper: [Super-Convergence](https://arxiv.org/abs/1708.07120). 
+- **One Cycle learning rate**, for a learning rate LR, we start from LR / 10 up to LR for 30% of the training time, and we scale down to LR / 25 for remaining time, the scaling is done in a cos annealing fashion (see Figure bellow), the momentum is also modified but in the opposite manner starting from 0.95 down to 0.85 and up to 0.95, for more detail see the paper: [Super-Convergence](https://arxiv.org/abs/1708.07120). 
 
 <p align="center"><img src="images/learning_rates.png" align="center" width="750"></p>
 
@@ -215,14 +215,14 @@ Config files are in `.json` format:
     },
 
     "loss": "CrossEntropyLoss2d",     // Loss (see utils/losses.py)
-    "ignore_index": 255,              // Class to ign50re (must be set to -1 for ADE20K) dataset
+    "ignore_index": 255,              // Class to ignore (must be set to -1 for ADE20K) dataset
     "lr_scheduler": {   
-        "type": "Poly",               // Learning rat50 scheduler (Poly of OneCycle)
+        "type": "Poly",               // Learning rate scheduler (Poly of OneCycle)
         "args": {}
     },
 
     "trainer": {
-        "epochs": 80,                 // Number of tr50ining epochs
+        "epochs": 80,                 // Number of training epochs
         "save_dir": "saved/",         // Checkpoints are saved in save_dir/models/
         "save_period": 10,            // Saving chechpoint each 10 epochs
   
