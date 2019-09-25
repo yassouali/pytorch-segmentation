@@ -186,13 +186,13 @@ Config files are in `.json` format:
             "scale": true,        // Random rescaling between 0.5 and 2 before croping
             "flip": true,         // Random H-FLip
             "rotate": true,       // Random rotation between 10 and -10 degrees
-            "blur": true,         // Adding slight amount of blut to the image
+            "blur": true,         // Adding a slight amount of blut to the image
             "split": "train_aug", // Split to use, depend of the dataset
             "num_workers": 8
         }
     },
 
-    "val_loader": {     // Same for val, but no dataau gmentation, only a center crop
+    "val_loader": {     // Same for val, but no data augmentation, only a center crop
         "type": "VOC",
         "args":{
             "data_dir": "data/",
@@ -217,7 +217,7 @@ Config files are in `.json` format:
     "loss": "CrossEntropyLoss2d",     // Loss (see utils/losses.py)
     "ignore_index": 255,              // Class to ignore (must be set to -1 for ADE20K) dataset
     "lr_scheduler": {   
-        "type": "Poly",               // Learning rate scheduler (Poly of OneCycle)
+        "type": "Poly",               // Learning rate scheduler (Poly or OneCycle)
         "args": {}
     },
 
