@@ -41,8 +41,8 @@ class CityScapesDataset(BaseDataSet):
 
         image_paths, label_paths = [], []
         for city in os.listdir(image_path):
-            image_paths.extend(glob(os.path.join(image_path, city, '*.png')))
-            label_paths.extend(glob(os.path.join(label_path, city, f'*{SUFIX}')))
+            image_paths.extend(sorted(glob(os.path.join(image_path, city, '*.png'))))
+            label_paths.extend(sorted(glob(os.path.join(label_path, city, f'*{SUFIX}'))))
         self.files = list(zip(image_paths, label_paths))
 
     def _load_data(self, index):
