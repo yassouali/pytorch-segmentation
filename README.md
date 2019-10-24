@@ -3,18 +3,18 @@
 <!-- TOC -->
 
 - [Semantic Segmentation in PyTorch](#semantic-segmentation-in-pytorch)
-    - [Requirements](#requirements)
-    - [Main Features](#main-features)
-        - [Models](#models)
-        - [Datasets](#datasets)
-        - [Losses](#losses)
-        - [Learning rate schedulers](#learning-rate-schedulers)
-        - [Data augmentation](#data-augmentation)
-    - [Training](#training)
-    - [Inference](#inference)
-    - [Code structure](#code-structure)
-    - [Config file format](#config-file-format)
-    - [Acknowledgement](#acknowledgement)
+  - [Requirements](#requirements)
+  - [Main Features](#main-features)
+    - [Models](#models)
+    - [Datasets](#datasets)
+    - [Losses](#losses)
+    - [Learning rate schedulers](#learning-rate-schedulers)
+    - [Data augmentation](#data-augmentation)
+  - [Training](#training)
+  - [Inference](#inference)
+  - [Code structure](#code-structure)
+  - [Config file format](#config-file-format)
+  - [Acknowledgement](#acknowledgement)
 
 <!-- /TOC -->
 
@@ -245,3 +245,4 @@ Config files are in `.json` format:
 ## Acknowledgement
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
 - [Pytorch-Template](https://github.com/victoresque/pytorch-template/blob/master/README.m)
+- [Synchronized-BatchNorm-PyTorch](https://github.com/vacancy/Synchronized-BatchNorm-PyTorch)
