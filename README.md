@@ -165,6 +165,7 @@ Config files are in `.json` format:
 {
   "name": "PSPNet",         // training session name
   "n_gpu": 1,               // number of GPUs to use for training.
+  "use_synch_bn": true,     // Using Synchronized batchnorm (for multi-GPU usage)
 
     "arch": {
         "type": "PSPNet", // name of model architecture to train
