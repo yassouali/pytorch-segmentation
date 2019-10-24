@@ -8,6 +8,8 @@ from torch.utils import tensorboard
 from utils import helpers
 from utils import logger
 import utils.lr_scheduler
+from utils.sync_batchnorm import convert_model
+from utils.sync_batchnorm import DataParallelWithCallback
 
 def get_instance(module, name, config, *args):
     # GET THE CORRESPONDING CLASS / FCT 
@@ -28,11 +30,12 @@ class BaseTrainer:
 
         # SETTING THE DEVICE
         self.device, availble_gpus = self._get_available_devices(self.config['n_gpu'])
-        if len(availble_gpus) > 1:
+        if config["use_synch_bn"]:
+            self.model = convert_model(self.model)
+            self.model = DataParallelWithCallback(self.model, device_ids=availble_gpus)
+        else:
             self.model = torch.nn.DataParallel(self.model, device_ids=availble_gpus)
-            self.loss = torch.nn.DataParallel(self.loss, device_ids=availble_gpus)
         self.model.to(self.device)
-        self.loss.to(self.device)
 
         # CONFIGS
         cfg_trainer = self.config['trainer']
