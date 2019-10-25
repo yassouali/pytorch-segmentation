@@ -1,7 +1,7 @@
 {
     "name": "PSPNet",
     "n_gpu": 1,
-    "use_synch_bn": false,
+    "use_synch_bn": true,
 
     "arch": {
         "type": "PSPNet",

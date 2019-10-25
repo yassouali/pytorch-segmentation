@@ -60,7 +60,6 @@ class BaseDataSet(Dataset):
             label = label[start_h:end_h, start_w:end_w]
         return image, label
 
-
     def _augmentation(self, image, label):
         h, w, _ = image.shape
         # Scaling, we set the bigger to base size, and the smaller 
@@ -73,45 +72,38 @@ class BaseDataSet(Dataset):
             h, w = (longside, int(1.0 * longside * w / h + 0.5)) if h > w else (int(1.0 * longside * h / w + 0.5), longside)
             image = cv2.resize(image, (w, h), interpolation=cv2.INTER_LINEAR)
             label = cv2.resize(label, (w, h), interpolation=cv2.INTER_NEAREST)
-       
-        while True: # The rotated crop must have some objects
-            image_new, label_new = image, label
-            h, w, _ = image_new.shape
-            # Rotate the image with an angle between -10 and 10
-            if self.rotate:
-                angle = random.randint(-10, 10)
-                center = (w / 2, h / 2)
-                rot_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
-                image_new = cv2.warpAffine(image_new, rot_matrix, (w, h), flags=cv2.INTER_LINEAR)#, borderMode=cv2.BORDER_REFLECT)
-                label_new = cv2.warpAffine(label_new, rot_matrix, (w, h), flags=cv2.INTER_NEAREST)#,  borderMode=cv2.BORDER_REFLECT)
+    
+        h, w, _ = image.shape
+        # Rotate the image with an angle between -10 and 10
+        if self.rotate:
+            angle = random.randint(-10, 10)
+            center = (w / 2, h / 2)
+            rot_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+            image = cv2.warpAffine(image, rot_matrix, (w, h), flags=cv2.INTER_LINEAR)#, borderMode=cv2.BORDER_REFLECT)
+            label = cv2.warpAffine(label, rot_matrix, (w, h), flags=cv2.INTER_NEAREST)#,  borderMode=cv2.BORDER_REFLECT)
 
-            # Padding to return the correct crop size
-            if self.crop_size:
-                pad_h = max(self.crop_size - h, 0)
-                pad_w = max(self.crop_size - w, 0)
-                pad_kwargs = {
-                    "top": 0,
-                    "bottom": pad_h,
-                    "left": 0,
-                    "right": pad_w,
-                    "borderType": cv2.BORDER_CONSTANT,}
-                if pad_h > 0 or pad_w > 0:
-                    image_new = cv2.copyMakeBorder(image_new, value=0, **pad_kwargs)
-                    label_new = cv2.copyMakeBorder(label_new, value=0, **pad_kwargs)
-                
-                # Cropping 
-                h, w, _ = image_new.shape
-                start_h = random.randint(0, h - self.crop_size)
-                start_w = random.randint(0, w - self.crop_size)
-                end_h = start_h + self.crop_size
-                end_w = start_w + self.crop_size
-                image_new = image_new[start_h:end_h, start_w:end_w]
-                label_new = label_new[start_h:end_h, start_w:end_w]
-
-            if label_new.sum() != 0:
-                image = image_new
-                label = label_new
-                break
+        # Padding to return the correct crop size
+        if self.crop_size:
+            pad_h = max(self.crop_size - h, 0)
+            pad_w = max(self.crop_size - w, 0)
+            pad_kwargs = {
+                "top": 0,
+                "bottom": pad_h,
+                "left": 0,
+                "right": pad_w,
+                "borderType": cv2.BORDER_CONSTANT,}
+            if pad_h > 0 or pad_w > 0:
+                image = cv2.copyMakeBorder(image, value=0, **pad_kwargs)
+                label = cv2.copyMakeBorder(label, value=0, **pad_kwargs)
+            
+            # Cropping 
+            h, w, _ = image.shape
+            start_h = random.randint(0, h - self.crop_size)
+            start_w = random.randint(0, w - self.crop_size)
+            end_h = start_h + self.crop_size
+            end_w = start_w + self.crop_size
+            image = image[start_h:end_h, start_w:end_w]
+            label = label[start_h:end_h, start_w:end_w]
 
         # Random H flip
         if self.flip:
