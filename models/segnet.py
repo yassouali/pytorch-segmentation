@@ -14,7 +14,7 @@ class SegNet(BaseModel):
 
         # Adjust the input size
         if in_channels != 3:
-            encoder[0].in_channels = nn.Conv2d(in_channels, 64, kernel_size=3, stride=1, padding=1)
+            encoder[0] = nn.Conv2d(in_channels, 64, kernel_size=3, stride=1, padding=1)
 
         # Encoder, VGG without any maxpooling
         self.stage1_encoder = nn.Sequential(*encoder[:6])
