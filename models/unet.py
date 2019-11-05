@@ -35,13 +35,18 @@ class decoder(nn.Module):
             nn.ReLU(inplace=True),
         )
 
-    def forward(self, x_copy, x):
+    def forward(self, x_copy, x, interpolate=True):
         x = self.up(x)
-        # Padding in case the incomping volumes are of different sizes
-        diffY = x_copy.size()[2] - x.size()[2]
-        diffX = x_copy.size()[3] - x.size()[3]
-        x = F.pad(x, (diffX // 2, diffX - diffX // 2,
-                        diffY // 2, diffY - diffY // 2))
+        if interpolate:
+            # Iterpolating instead of padding gives better results
+            x = F.interpolate(x, size=(x_copy.size(2), x_copy.size(3)),
+                              mode="bilinear", align_corners=True)
+        else:
+            # Padding in case the incomping volumes are of different sizes
+            diffY = x_copy.size()[2] - x.size()[2]
+            diffX = x_copy.size()[3] - x.size()[3]
+            x = F.pad(x, (diffX // 2, diffX - diffX // 2,
+                            diffY // 2, diffY - diffY // 2))
         # Concatenate
         x = torch.cat([x_copy, x], dim=1)
         x = self.up_conv(x)
