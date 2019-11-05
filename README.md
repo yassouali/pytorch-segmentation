@@ -135,7 +135,7 @@ The code structure is based on [pytorch-template](https://github.com/victoresque
   pytorch-template/
   │
   ├── train.py - main script to start training
-  ├── predict.py - inference using a trained model
+  ├── inference.py - inference using a trained model
   ├── trainer.py - the main trained
   ├── config.json - holds configuration for training
   │
