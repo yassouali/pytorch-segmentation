@@ -103,7 +103,7 @@ tensorboard --logdir saved
 For inference, we need a PyTorch trained model, the images we'd like to segment and the config used in training (to load the correct model and other parameters), 
 
 ```bash
-python predict.py --config config.json --model best_model.pth --images images_folder
+python inference.py --config config.json --model best_model.pth --images images_folder
 ```
 
 The predictions will be saved as `.png` images using the default palette in the passed fodler name, if not, `outputs\` is used, for Pacal VOC the default palette is:
