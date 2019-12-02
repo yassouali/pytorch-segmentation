@@ -139,10 +139,8 @@ class BaseTrainer:
         state = {
             'arch': type(self.model).__name__,
             'epoch': epoch,
-            'logger': self.train_logger,
             'state_dict': self.model.state_dict(),
             'optimizer': self.optimizer.state_dict(),
-            #'lr_scheduler': self.lr_scheduler.state_dict(),
             'monitor_best': self.mnt_best,
             'config': self.config
         }
