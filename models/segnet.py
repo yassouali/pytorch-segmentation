@@ -178,7 +178,7 @@ class SegResNet(BaseModel):
         resnet50 = models.resnet50(pretrained=pretrained)
         encoder = list(resnet50.children())
         if in_channels != 3:
-            encoder[0].in_channels = nn.Conv2d(in_channels, 64, kernel_size=3, stride=1, padding=1)
+            encoder[0] = nn.Conv2d(in_channels, 64, kernel_size=3, stride=1, padding=1)
         encoder[3].return_indices = True
 
         # Encoder

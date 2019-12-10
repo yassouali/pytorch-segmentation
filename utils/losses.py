@@ -77,11 +77,11 @@ class CE_DiceLoss(nn.Module):
         return CE_loss + dice_loss
 
 class LovaszSoftmax(nn.Module):
-    def __init__(self, classes='present', per_image=False, ignore=255):
+    def __init__(self, classes='present', per_image=False, ignore_index=255):
         super(LovaszSoftmax, self).__init__()
         self.smooth = classes
         self.per_image = per_image
-        self.ignore_index = ignore
+        self.ignore_index = ignore_index
     
     def forward(self, output, target):
         logits = F.softmax(output, dim=1)
