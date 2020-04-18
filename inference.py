@@ -113,7 +113,7 @@ def main():
     availble_gpus = list(range(torch.cuda.device_count()))
     device = torch.device('cuda:0' if len(availble_gpus) > 0 else 'cpu')
 
-    checkpoint = torch.load(args.model)
+    checkpoint = torch.load(args.model, map_location=device)
     if isinstance(checkpoint, dict) and 'state_dict' in checkpoint.keys():
         checkpoint = checkpoint['state_dict']
     if 'module' in list(checkpoint.keys())[0] and not isinstance(model, torch.nn.DataParallel):
