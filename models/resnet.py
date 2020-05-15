@@ -1,4 +1,4 @@
-# Origian code and chechpoints by Hang Zhang
+# Original code and checkpoints by Hang Zhang
 # https://github.com/zhanghang1989/PyTorch-Encoding
 
 
@@ -21,9 +21,9 @@ __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
     'resnet34': 'https://download.pytorch.org/models/resnet34-333f7ec4.pth',
-    'resnet50': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet50-25c4b509.zip',
-    'resnet101': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet101-2a57e44d.zip',
-    'resnet152': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet152-0d43d698.zip'
+    'resnet50': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet50s-a75c83cf.zip',
+    'resnet101': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet101s-03a0f310.zip',
+    'resnet152': 'https://hangzh.s3.amazonaws.com/encoding/models/resnet152s-36670e8b.zip'
 }
 
 
