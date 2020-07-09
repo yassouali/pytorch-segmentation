@@ -39,23 +39,14 @@ class AverageMeter(object):
     def average(self):
         return np.round(self.avg, 5)
 
-def batch_pix_accuracy(output, target, num_class):
-    _, predict = torch.max(output, 1)
-
-    predict = predict.int() + 1
-    target = target.int() + 1
-
-    pixel_labeled = (target <= num_class).sum()
-    pixel_correct = ((predict == target)*(target <= num_class)).sum()
+def batch_pix_accuracy(predict, target, labeled):
+    pixel_labeled = labeled.sum()
+    pixel_correct = ((predict == target) * labeled).sum()
     assert pixel_correct <= pixel_labeled, "Correct area should be smaller than Labeled"
     return pixel_correct.cpu().numpy(), pixel_labeled.cpu().numpy()
 
-def batch_intersection_union(output, target, num_class):
-    _, predict = torch.max(output, 1)
-    predict = predict + 1
-    target = target + 1
-
-    predict = predict * (target <= num_class).long()
+def batch_intersection_union(predict, target, num_class, labeled):
+    predict = predict * labeled.long()
     intersection = predict * (predict == target).long()
 
     area_inter = torch.histc(intersection.float(), bins=num_class, max=num_class, min=1)
@@ -66,6 +57,11 @@ def batch_intersection_union(output, target, num_class):
     return area_inter.cpu().numpy(), area_union.cpu().numpy()
 
 def eval_metrics(output, target, num_class):
-    correct, labeled = batch_pix_accuracy(output.data, target, num_class)
-    inter, union = batch_intersection_union(output.data, target, num_class)
-    return [np.round(correct, 5), np.round(labeled, 5), np.round(inter, 5), np.round(union, 5)]
+    _, predict = torch.max(output.data, 1)
+    predict = predict + 1
+    target = target + 1
+
+    labeled = (target > 0) * (target <= num_class)
+    correct, num_labeled = batch_pix_accuracy(predict, target, labeled)
+    inter, union = batch_intersection_union(predict, target, num_class, labeled)
+    return [np.round(correct, 5), np.round(num_labeled, 5), np.round(inter, 5), np.round(union, 5)]
