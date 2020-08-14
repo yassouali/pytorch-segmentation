@@ -6,7 +6,7 @@ from sklearn.utils import class_weight
 from utils.lovasz_losses import lovasz_softmax
 
 def make_one_hot(labels, classes):
-    one_hot = torch.cuda.FloatTensor(labels.size()[0], classes, labels.size()[2], labels.size()[3]).zero_()
+    one_hot = torch.FloatTensor(labels.size()[0], classes, labels.size()[2], labels.size()[3]).zero_().to(labels.device)
     target = one_hot.scatter_(1, labels.data, 1)
     return target
 
