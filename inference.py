@@ -113,11 +113,23 @@ def main():
     availble_gpus = list(range(torch.cuda.device_count()))
     device = torch.device('cuda:0' if len(availble_gpus) > 0 else 'cpu')
 
+    # Load checkpoint
     checkpoint = torch.load(args.model, map_location=device)
     if isinstance(checkpoint, dict) and 'state_dict' in checkpoint.keys():
         checkpoint = checkpoint['state_dict']
+    # If during training, we used data parallel
     if 'module' in list(checkpoint.keys())[0] and not isinstance(model, torch.nn.DataParallel):
-        model = torch.nn.DataParallel(model)
+        # for gpu inference, use data parallel
+        if "cuda" in device.type:
+            model = torch.nn.DataParallel(model)
+        else:
+        # for cpu inference, remove module
+            new_state_dict = OrderedDict()
+            for k, v in state_dict.items():
+                name = k[7:]
+                new_state_dict[name] = v
+            checkpoint = new_state_dict
+    # load
     model.load_state_dict(checkpoint)
     model.to(device)
     model.eval()
