@@ -15,6 +15,7 @@ from PIL import Image
 import dataloaders
 import models
 from utils.helpers import colorize_mask
+from collections import OrderedDict
 
 def pad_image(img, target_size):
     rows_to_pad = max(target_size[0] - img.shape[2], 0)
