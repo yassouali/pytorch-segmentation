@@ -126,7 +126,7 @@ def main():
         else:
         # for cpu inference, remove module
             new_state_dict = OrderedDict()
-            for k, v in state_dict.items():
+            for k, v in checkpoint.items():
                 name = k[7:]
                 new_state_dict[name] = v
             checkpoint = new_state_dict
