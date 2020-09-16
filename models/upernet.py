@@ -130,7 +130,9 @@ class UperNet(BaseModel):
         self.FPN = FPN_fuse(feature_channels, fpn_out=fpn_out)
         self.head = nn.Conv2d(fpn_out, num_classes, kernel_size=3, padding=1)
         if freeze_bn: self.freeze_bn()
-    
+        if freeze_backbone: 
+            set_trainable([self.backbone], False)
+
     def forward(self, x):
         input_size = (x.size()[2], x.size()[3])
 

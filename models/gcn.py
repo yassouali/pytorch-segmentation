@@ -30,7 +30,8 @@ class Block_Resnet_GCN(nn.Module):
                                 kernel_size=(kernel_size, 1), padding=(kernel_size//2, 0))
         self.bn22 = nn.BatchNorm2d(out_channels)
         self.relu22 = nn.ReLU(inplace=True)
-    
+
+
     def forward(self, x):
         x1 = self.conv11(x)
         x1 = self.bn11(x1)
@@ -228,6 +229,8 @@ class GCN(BaseModel):
                                             output_padding=1, stride=2, bias=False)
         self.final_conv = nn.Conv2d(num_classes, num_classes, kernel_size=1)
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.backbone], False)
 
     def forward(self, x):
         x1, x2, x3, x4, conv1_sz = self.backbone(x)

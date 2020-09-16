@@ -222,6 +222,8 @@ class DeepLab_DUC_HDC(BaseModel):
         self.decoder = Decoder(low_level_channels, num_classes)
         self.DUC_out = DUC(num_classes, num_classes, 4)
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.backbone], False)
 
     def forward(self, x):
         H, W = x.size(2), x.size(3)

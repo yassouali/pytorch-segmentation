@@ -50,6 +50,8 @@ class SegNet(BaseModel):
         self._initialize_weights(self.stage1_decoder, self.stage2_decoder, self.stage3_decoder,
                                     self.stage4_decoder, self.stage5_decoder)
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.stage1_encoder, self.stage2_encoder, self.stage3_encoder, self.stage4_encoder, self.stage5_encoder], False)
 
     def _initialize_weights(self, *stages):
         for modules in stages:
@@ -203,6 +205,8 @@ class SegResNet(BaseModel):
             nn.Conv2d(64, num_classes, kernel_size=3, stride=1, padding=1)
         )
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.first_conv, self.encoder], False)
 
     def forward(self, x):
         inputsize = x.size()

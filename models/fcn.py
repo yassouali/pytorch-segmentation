@@ -72,6 +72,8 @@ class FCN8(BaseModel):
             if isinstance(m, nn.ConvTranspose2d):
                 m.weight.requires_grad = False
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.pool3, self.pool4, self.pool5], False)
 
     def forward(self, x):
         imh_H, img_W = x.size()[2], x.size()[3]

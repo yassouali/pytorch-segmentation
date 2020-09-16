@@ -350,6 +350,8 @@ class DeepLab(BaseModel):
         self.decoder = Decoder(low_level_channels, num_classes)
 
         if freeze_bn: self.freeze_bn()
+        if freeze_backbone: 
+            set_trainable([self.backbone], False)
 
     def forward(self, x):
         H, W = x.size(2), x.size(3)
