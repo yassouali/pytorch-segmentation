@@ -1,5 +1,5 @@
 from .fcn import FCN8
-from .unet import UNet
+from .unet import UNet, UNetResnet
 from .segnet import SegNet
 from .segnet import SegResNet
 from .enet import ENet

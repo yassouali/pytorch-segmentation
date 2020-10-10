@@ -43,7 +43,7 @@ class PSPNet(BaseModel):
         super(PSPNet, self).__init__()
         # TODO: Use synch batchnorm
         norm_layer = nn.BatchNorm2d
-        model = getattr(resnet, backbone)(pretrained, norm_layer=norm_layer, )
+        model = getattr(resnet, backbone)(pretrained, norm_layer=norm_layer)
         m_out_sz = model.fc.in_features
         self.use_aux = use_aux 
 
