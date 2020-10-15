@@ -41,7 +41,6 @@ class _PSPModule(nn.Module):
 class PSPNet(BaseModel):
     def __init__(self, num_classes, in_channels=3, backbone='resnet152', pretrained=True, use_aux=True, freeze_bn=False, freeze_backbone=False):
         super(PSPNet, self).__init__()
-        # TODO: Use synch batchnorm
         norm_layer = nn.BatchNorm2d
         model = getattr(resnet, backbone)(pretrained, norm_layer=norm_layer)
         m_out_sz = model.fc.in_features
