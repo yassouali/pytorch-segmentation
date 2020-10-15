@@ -27,7 +27,7 @@ class encoder(nn.Module):
         return x, x_pooled
 
 class decoder(nn.Module):
-    def __init__(self, in_channels, out_channels, interpolate=False):
+    def __init__(self, in_channels, out_channels, interpolate=True):
         super(decoder, self).__init__()
         if interpolate:
             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
