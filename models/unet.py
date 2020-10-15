@@ -12,10 +12,10 @@ class encoder(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(encoder, self).__init__()
         self.down_conv = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
         )
@@ -27,30 +27,31 @@ class encoder(nn.Module):
         return x, x_pooled
 
 class decoder(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, interpolate=False):
         super(decoder, self).__init__()
-        self.up = nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2, stride=2)
+        if interpolate:
+            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        else:
+            self.up = nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2, stride=2)
+
         self.up_conv = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
         )
 
     def forward(self, x_copy, x, interpolate=False):
         x = self.up(x)
-        if interpolate:
-            # Iterpolating instead of padding
-            x = F.interpolate(x, size=(x_copy.size(2), x_copy.size(3)),
-                              mode="bilinear", align_corners=True)
-        else:
-            # Padding in case the incomping volumes are of different sizes
-            diffY = x_copy.size()[2] - x.size()[2]
-            diffX = x_copy.size()[3] - x.size()[3]
-            x = F.pad(x, (diffX // 2, diffX - diffX // 2,
-                            diffY // 2, diffY - diffY // 2))
+
+        # Padding in case the incomping volumes are of different sizes
+        diffY = x_copy.size()[2] - x.size()[2]
+        diffX = x_copy.size()[3] - x.size()[3]
+        x = F.pad(x, (diffX // 2, diffX - diffX // 2,
+                        diffY // 2, diffY - diffY // 2))
+
         # Concatenate
         x = torch.cat([x_copy, x], dim=1)
         x = self.up_conv(x)
