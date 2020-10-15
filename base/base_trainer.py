@@ -169,10 +169,7 @@ class BaseTrainer:
         if checkpoint['config']['optimizer']['type'] != self.config['optimizer']['type']:
             self.logger.warning({'Warning! Current optimizer is not the same as the one in the checkpoint'})
         self.optimizer.load_state_dict(checkpoint['optimizer'])
-        # if self.lr_scheduler:
-        #     self.lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
 
-        self.train_logger = checkpoint['logger']
         self.logger.info(f'Checkpoint <{resume_path}> (epoch {self.start_epoch}) was loaded')
 
     def _train_epoch(self, epoch):
