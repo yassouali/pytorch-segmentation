@@ -14,7 +14,11 @@ from torchvision import models
 import torch.utils.model_zoo as model_zoo
 from utils.helpers import initialize_weights,set_trainable
 from itertools import chain
-#from Xception_master.xception import xception_65
+'''
+'xception_65.pth'URL:https://github.com/zhangtianlun12/deeplabv3-/releases/download/v0.1/xception_65.pth
+'''
+
+
 ''' 
 -> ResNet BackBone
 '''
@@ -1040,3 +1044,4 @@ class DeepLab(BaseModel):
     def freeze_bn(self):
         for module in self.modules():
             if isinstance(module, nn.BatchNorm2d): module.eval()
+                
