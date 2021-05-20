@@ -335,7 +335,7 @@ class Decoder(nn.Module):
 
 class DeepLab(BaseModel):
     def __init__(self, num_classes, in_channels=3, backbone='xception', pretrained=True, 
-                output_stride=16, freeze_bn=False, **_):
+                output_stride=16, freeze_bn=False, freeze_backbone=False, **_):
                 
         super(DeepLab, self).__init__()
         assert ('xception' or 'resnet' in backbone)
