@@ -60,7 +60,7 @@ class BottleneckGCN(nn.Module):
         else: self.downsample = None
         
         self.gcn = Block_Resnet_GCN(kernel_size, in_channels, out_channels_gcn)
-        self.conv1x1 = nn.Conv2d(out_channels_gcn, out_channels, 1, bias=False)
+        self.conv1x1 = nn.Conv2d(out_channels_gcn, out_channels, 1, stride=stride, bias=False)
         self.bn1x1 = nn.BatchNorm2d(out_channels)
 
     def forward(self, x):
