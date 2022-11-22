@@ -2,5 +2,5 @@ torch==1.1.0
 torchvision==0.3.0
 tqdm==4.32.2
 tensorboard==1.14.0
-Pillow==6.2.0
+Pillow==9.3.0
 opencv-python==4.1.0.25
