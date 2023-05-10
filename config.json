@@ -1,10 +1,10 @@
 {
-    "name": "PSPNet",
+    "name": "DeepSceneDeepLabV3+",
     "n_gpu": 1,
     "use_synch_bn": false,
 
     "arch": {
-        "type": "PSPNet",
+        "type": "DeepLab",
         "args": {
             "backbone": "resnet50",
             "freeze_bn": false,
@@ -13,31 +13,31 @@
     },
 
     "train_loader": {
-        "type": "VOC",
+        "type": "DeepScene",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "/home/robot/freiburg_forest_annotated/",
             "batch_size": 8,
-            "base_size": 400,
-            "crop_size": 380,
+            "base_size": 480,
+            "crop_size": 440,
             "augment": true,
             "shuffle": true,
             "scale": true,
             "flip": true,
             "rotate": true,
             "blur": false,
-            "split": "train_aug",
-            "num_workers": 8
+            "split": "training",
+            "num_workers": 4
         }
     },
 
     "val_loader": {
-        "type": "VOC",
+        "type": "DeepScene",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "/home/robot/freiburg_forest_annotated/",
             "batch_size": 8,
             "crop_size": 480,
             "val": true,
-            "split": "val",
+            "split": "validation",
             "num_workers": 4
         }
     },

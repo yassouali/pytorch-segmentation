@@ -23,7 +23,7 @@ class DeepSceneDataset(BaseDataSet):
 			transforms (callable, optional): Optional transform to be applied
 				on a sample.
 		"""
-		self.num_classes = 6
+		self.num_classes = 7
 		self.palette = palette.DeepScene_palette
 
 		self.images = []
@@ -56,21 +56,21 @@ class DeepSceneDataset(BaseDataSet):
 			
 			if "train" in self.split:
 				train_images, train_targets = self.gather_images(os.path.join(self.root, 'train/rgb'),
-											    	    os.path.join(self.root, 'train/GT_index'))
+											    	    os.path.join(self.root, 'train/GT_color'))
 				
 				self.images.extend(train_images)
 				self.targets.extend(train_targets)
 
 				if self.split == "train_extra":
 					extra_images, extra_targets = self.gather_images(os.path.join(self.root, 'trainextra/rgb'),
-											         	    os.path.join(self.root, 'trainextra/GT_index'))
+											         	    os.path.join(self.root, 'trainextra/GT_color'))
 
 					self.images.extend(extra_images)
 					self.targets.extend(extra_targets)
 
 			elif self.split == "validation":
 				val_images, val_targets = self.gather_images(os.path.join(self.root, 'test/rgb'),
-											     os.path.join(self.root, 'test/GT_index'))
+											     os.path.join(self.root, 'test/GT_color'))
 
 				self.images.extend(val_images)
 				self.targets.extend(val_targets)
@@ -108,10 +108,5 @@ class DeepScene(BaseDataLoader):
 			'val': val
 		}
 
-		if split in ["train_aug", "trainval_aug", "val_aug", "test_aug"]:
-			self.dataset = DeepSceneDataset(**kwargs)
-		elif split in ["train", "trainval", "val", "test"]:
-			self.dataset = DeepSceneDataset(**kwargs)
-		else: raise ValueError(f"Invalid split name {split}")
-		
+		self.dataset = DeepSceneDataset(**kwargs)
 		super().__init__(self.dataset, batch_size, shuffle, num_workers, val_split)
