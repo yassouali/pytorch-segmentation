@@ -15,17 +15,14 @@ class DeepSceneDataset(BaseDataSet):
 	http://deepscene.cs.uni-freiburg.de/
 	"""
 	def __init__(self, **kwargs):
-		"""
-		Parameters:
-			root_dir (string): Root directory of the dumped NYU-Depth dataset.
-			image_set (string, optional): Select the image_set to use, ``train``, ``val``
-			train_extra (bool, optional): If True, use extra images during training
-			transforms (callable, optional): Optional transform to be applied
-				on a sample.
-		"""
 		self.num_classes = 7
 		self.palette = palette.DeepScene_palette
 
+		self.mask_mapping = {}
+
+		for i in range(0, len(self.palette), 3):
+			self.mask_mapping[tuple(self.palette[i:i+3])] = i // 3
+		
 		self.images = []
 		self.targets = []
 
@@ -82,15 +79,18 @@ class DeepSceneDataset(BaseDataSet):
 	def _load_data(self, index):
 		image_id = self.images[index]
 		image = np.asarray(Image.open(self.images[index]).convert("RGB"), dtype=np.float32)
-		target = np.asarray(Image.open(self.targets[index]), dtype=np.int32)
+		target_rgb = np.asarray(Image.open(self.targets[index]).convert("RGB"), dtype=np.float32)
+		target = np.zeros(target_rgb.shape[:2], dtype=np.int32)
+		for cls in self.mask_mapping:
+			target[(target_rgb == cls).all(axis=2)] = self.mask_mapping[cls]
 		return image, target, image_id
 
 class DeepScene(BaseDataLoader):
 	def __init__(self, data_dir, batch_size, split, crop_size=None, base_size=None, scale=True, num_workers=1, val=False,
                     shuffle=False, flip=False, rotate=False, blur= False, augment=False, val_split= None, return_id=False):
 		
-		self.MEAN = [0.45734706, 0.43338275, 0.40058118]
-		self.STD = [0.23965294, 0.23532275, 0.2398498]
+		self.MEAN = [0.485, 0.456, 0.406]
+		self.STD = [0.229, 0.224, 0.225]
 
 		kwargs = {
 			'root': data_dir,

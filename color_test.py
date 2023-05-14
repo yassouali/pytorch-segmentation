@@ -17,5 +17,6 @@ for image in images:
 
 colors = list(colors)
 
+print(len(images))
 print(len(colors))
 print(colors)

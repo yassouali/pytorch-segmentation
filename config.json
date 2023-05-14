@@ -6,7 +6,7 @@
     "arch": {
         "type": "DeepLab",
         "args": {
-            "backbone": "resnet50",
+            "backbone": "resnet18",
             "freeze_bn": false,
             "freeze_backbone": false
         }
@@ -15,8 +15,8 @@
     "train_loader": {
         "type": "DeepScene",
         "args":{
-            "data_dir": "/home/robot/freiburg_forest_annotated/",
-            "batch_size": 8,
+            "data_dir": "/home/markus/freiburg_forest_annotated/",
+            "batch_size": 2,
             "base_size": 480,
             "crop_size": 440,
             "augment": true,
@@ -33,8 +33,8 @@
     "val_loader": {
         "type": "DeepScene",
         "args":{
-            "data_dir": "/home/robot/freiburg_forest_annotated/",
-            "batch_size": 8,
+            "data_dir": "/home/markus/freiburg_forest_annotated/",
+            "batch_size": 2,
             "crop_size": 480,
             "val": true,
             "split": "validation",
