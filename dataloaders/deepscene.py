@@ -1,4 +1,4 @@
-# Orignally written by Dustin Franklin
+# Orignally written by Dustin Franklin, adapted by Markus Schiffer
 # https://github.com/dusty-nv/pytorch-segmentation/blob/master/datasets/deepscene.py
 
 from base import BaseDataSet, BaseDataLoader
