@@ -1,0 +1,7 @@
+0   Void
+1   Road
+2   Grass
+3   Vegetation
+4   Tree
+5   Sky
+6   Obstacle
