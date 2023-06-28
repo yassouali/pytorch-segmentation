@@ -1,4 +1,4 @@
-# Orignally written by Dustin Franklin, adapted by Markus Schiffer
+# Originally written by Dustin Franklin, adapted by Markus Schiffer
 # https://github.com/dusty-nv/pytorch-segmentation/blob/master/datasets/deepscene.py
 
 from base import BaseDataSet, BaseDataLoader
@@ -49,21 +49,14 @@ class DeepSceneDataset(BaseDataSet):
 		return image_files, label_files
 	
 	def _set_files(self):
-		if self.split in ["training", "train_extra", "validation"]:
+		if self.split in ["training", "validation"]:
 			
-			if "train" in self.split:
+			if self.split == "training":
 				train_images, train_targets = self.gather_images(os.path.join(self.root, 'train/rgb'),
 											    	    os.path.join(self.root, 'train/GT_color'))
 				
 				self.images.extend(train_images)
 				self.targets.extend(train_targets)
-
-				if self.split == "train_extra":
-					extra_images, extra_targets = self.gather_images(os.path.join(self.root, 'trainextra/rgb'),
-											         	    os.path.join(self.root, 'trainextra/GT_color'))
-
-					self.images.extend(extra_images)
-					self.targets.extend(extra_targets)
 
 			elif self.split == "validation":
 				val_images, val_targets = self.gather_images(os.path.join(self.root, 'test/rgb'),

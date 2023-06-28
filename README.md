@@ -66,6 +66,9 @@ The second step is to augment the dataset using the additionnal annotations prov
 - **COCO Stuff:** For COCO, there is two partitions, CocoStuff10k with only 10k that are used for training the evaluation, note that this dataset is outdated, can be used for small scale testing and training, and can be downloaded [here](https://github.com/nightrome/cocostuff10k). For the official dataset with all of the training 164k examples, it can be downloaded from the official [website](http://cocodataset.org/#download).\
 Note that when using COCO dataset, 164k version is used per default, if 10k is prefered, this needs to be specified with an additionnal parameter `partition = 'CocoStuff164k'` in the config file with the corresponding path.
 
+
+- **DeepScene:** For DeepScene's Freiburg forest dataset, simply download the images and their annotations for training and validation from [http://deepscene.cs.uni-freiburg.de](http://deepscene.cs.uni-freiburg.de/static/datasets/download_freiburg_forest_annotated.sh). Note that the link downloads a script (.sh) file which will manage the downloads for the rest of the dataset. 
+
 ### Losses
 In addition to the Cross-Entorpy loss, there is also
 - **Dice-Loss**, which measures of overlap between two samples and can be more reflective of the training objective (maximizing the mIoU), but is highly non-convexe and can be hard to optimize.
