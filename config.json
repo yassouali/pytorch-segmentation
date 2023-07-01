@@ -1,43 +1,43 @@
 {
-    "name": "DeepSceneDeepLabV3+",
+    "name": "PSPNet",
     "n_gpu": 1,
     "use_synch_bn": false,
 
     "arch": {
-        "type": "DeepLab",
+        "type": "PSPNet",
         "args": {
-            "backbone": "resnet18",
+            "backbone": "resnet50",
             "freeze_bn": false,
             "freeze_backbone": false
         }
     },
 
     "train_loader": {
-        "type": "DeepScene",
+        "type": "VOC",
         "args":{
-            "data_dir": "/home/markus/freiburg_forest_annotated/",
-            "batch_size": 2,
-            "base_size": 480,
-            "crop_size": 440,
+            "data_dir": "data/VOCtrainval_11-May-2012",
+            "batch_size": 8,
+            "base_size": 400,
+            "crop_size": 380,
             "augment": true,
             "shuffle": true,
             "scale": true,
             "flip": true,
             "rotate": true,
             "blur": false,
-            "split": "training",
-            "num_workers": 4
+            "split": "train_aug",
+            "num_workers": 8
         }
     },
 
     "val_loader": {
-        "type": "DeepScene",
+        "type": "VOC",
         "args":{
-            "data_dir": "/home/markus/freiburg_forest_annotated/",
-            "batch_size": 2,
+            "data_dir": "data/VOCtrainval_11-May-2012",
+            "batch_size": 8,
             "crop_size": 480,
             "val": true,
-            "split": "validation",
+            "split": "val",
             "num_workers": 4
         }
     },
