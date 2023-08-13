@@ -14,7 +14,8 @@
     - [Learning rate schedulers](#learning-rate-schedulers)
     - [Data augmentation](#data-augmentation)
   - [Training](#training)
-  - [Inference](#inference)
+  - [Inference](#inference
+  - [Try on colab](#colab)
   - [Code structure](#code-structure)
   - [Config file format](#config-file-format)
   - [Acknowledgement](#acknowledgement)
@@ -129,6 +130,9 @@ Here are the parameters availble for inference:
 | :-------- | :----------: |:-----------------: |:-------------------:|:----------------:|
 | PSPNet    | ResNet 50    | 82%                | 79%                 | [Dropbox](https://www.dropbox.com/s/7rni1tzyjmdkiup/PSPnet.pth?dl=0) |
 
+## Colab
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AlfaranoAndrea/pytorch-segmentation/blob/master/tutorial.ipynb)
+The repository provide a colab notebook to download the cityscapes dataset and run the library.
 
 
 ## Code structure
