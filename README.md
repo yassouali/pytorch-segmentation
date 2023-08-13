@@ -2,6 +2,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AlfaranoAndrea/pytorch-segmentation/blob/master/tutorial.ipynb)
 
+
 <!-- TOC -->
 
 - [Semantic Segmentation in PyTorch](#semantic-segmentation-in-pytorch)
