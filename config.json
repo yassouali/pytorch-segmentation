@@ -25,7 +25,7 @@
             "flip": true,
             "rotate": true,
             "blur": false,
-            "split": "train_aug",
+            "split": "train",
             "num_workers": 8
         }
     },
