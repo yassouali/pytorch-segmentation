@@ -1,5 +1,7 @@
 # Semantic Segmentation in PyTorch
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yassouali/pytorch-segmentation/blob/master/tutorial.ipynb)
+
 
 <!-- TOC -->
 
@@ -13,6 +15,7 @@
     - [Data augmentation](#data-augmentation)
   - [Training](#training)
   - [Inference](#inference)
+  - [Try on colab](#colab)
   - [Code structure](#code-structure)
   - [Config file format](#config-file-format)
   - [Acknowledgement](#acknowledgement)
@@ -127,6 +130,10 @@ Here are the parameters availble for inference:
 | :-------- | :----------: |:-----------------: |:-------------------:|:----------------:|
 | PSPNet    | ResNet 50    | 82%                | 79%                 | [Dropbox](https://www.dropbox.com/s/7rni1tzyjmdkiup/PSPnet.pth?dl=0) |
 
+## Colab
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yassouali/pytorch-segmentation/blob/master/tutorial.ipynb)
+
+The repository provide a colab notebook to download the cityscapes dataset and run the library.
 
 
 ## Code structure

@@ -13,9 +13,9 @@
     },
 
     "train_loader": {
-        "type": "VOC",
+        "type": "CityScapes",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "./data/cityscapes",
             "batch_size": 8,
             "base_size": 400,
             "crop_size": 380,
@@ -25,15 +25,15 @@
             "flip": true,
             "rotate": true,
             "blur": false,
-            "split": "train_aug",
+            "split": "train",
             "num_workers": 8
         }
     },
 
     "val_loader": {
-        "type": "VOC",
+        "type": "CityScapes",
         "args":{
-            "data_dir": "data/VOCtrainval_11-May-2012",
+            "data_dir": "./data/cityscapes",
             "batch_size": 8,
             "crop_size": 480,
             "val": true,
