@@ -340,7 +340,7 @@ class DeepLab(BaseModel):
         super(DeepLab, self).__init__()
         assert ('xception' or 'resnet' in backbone)
         if 'resnet' in backbone:
-            self.backbone = ResNet(in_channels=in_channels, output_stride=output_stride, pretrained=pretrained)
+            self.backbone = ResNet(in_channels=in_channels, output_stride=output_stride, backbone=backbone, pretrained=pretrained)
             low_level_channels = 256
         else:
             self.backbone = Xception(output_stride=output_stride, pretrained=pretrained)
