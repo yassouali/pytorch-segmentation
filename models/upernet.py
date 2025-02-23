@@ -125,7 +125,7 @@ class UperNet(BaseModel):
             feature_channels = [64, 128, 256, 512]
         else:
             feature_channels = [256, 512, 1024, 2048]
-        self.backbone = ResNet(in_channels, pretrained=pretrained)
+        self.backbone = ResNet(in_channels, backbone=backbone, pretrained=pretrained)
         self.PPN = PSPModule(feature_channels[-1])
         self.FPN = FPN_fuse(feature_channels, fpn_out=fpn_out)
         self.head = nn.Conv2d(fpn_out, num_classes, kernel_size=3, padding=1)
